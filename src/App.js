@@ -93,7 +93,9 @@ function App() {
     <div className={"App"}>
       <Song currentSong={currentSong} prevSong={prevSong} nextSong={nextSong}></Song>
       {loading && <div style={{ width: "80vw", margin: "auto" }}>
-        <BorderLinearProgress variant="determinate" value={loading} /></div>}
+        <BorderLinearProgress variant="determinate" value={loading} />
+        <div style={{marginTop:"20px"}}>Loading {loading}%</div>
+        </div>}
       <div style={{ textAlign: "center", width: "80vw", margin: "auto" }}>
         <WaveSurfer onMount={handleWSMount} responsive={100}>
           <WaveForm id="waveform"
