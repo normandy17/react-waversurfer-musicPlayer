@@ -30,6 +30,7 @@ function App() {
   const [prevSong, setPrevSong] = useState(songs[9]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false)
+  const [click,setClick] = useState(0)
 
   
 
@@ -39,13 +40,17 @@ function App() {
     wavesurferRef.current = waveSurfer;
     if (wavesurferRef.current) {
       wavesurferRef.current.load(currentSong.audio);
-
-
+      let click=-1
       wavesurferRef.current.on("ready", () => {
-        console.log("WaveSurfer is ready");
+        console.log("WaveSurfer is ready", click);
         setLoading(false)
+        click++
+        if(click!=0)
+        {
         wavesurferRef.current.playPause();
+        console.log(wavesurferRef.current.isPlaying())
         setIsPlaying(true)
+        }
       });
 
       wavesurferRef.current.on("loading", data => {
@@ -66,19 +71,20 @@ function App() {
 
   const skipTrackHandler = (direction) => {
     let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-    if (direction === "skip-forward") {
+    if (direction === "skip-forward") {      
       setCurrentSong(songs[(currentIndex + 1) % songs.length]);
       wavesurferRef.current.load(songs[(currentIndex + 1) % songs.length].audio)
       setNextSong(songs[(currentIndex + 2) % songs.length])
       setPrevSong(songs[currentIndex])
+      
     }
     if (direction === "skip-back") {
       setCurrentSong(songs[(currentIndex - 1 + songs.length) % songs.length]);
       wavesurferRef.current.load(songs[(currentIndex - 1 + songs.length) % songs.length].audio)
       setNextSong(songs[currentIndex])
       setPrevSong(songs[(currentIndex - 2 + songs.length) % songs.length])
-    }
-     
+      
+    }    
     setIsPlaying(false)
   };
 
@@ -98,7 +104,7 @@ function App() {
             barGap={3}
             waveColor='#D9DCFF'
             progressColor='#4353FF'
-            cursorColor='#4353FF'
+            cursorColor='white'
             cursorWidth={3}
             responsive={100}
           >
@@ -106,7 +112,7 @@ function App() {
         </WaveSurfer>
 
       </div>
-      <div style={{ margin: "auto", display: "flex", width: "30%", padding: "1rem", alignItems: "center", justifyContent: "space-between", marginTop: "30px" }}>
+     {!loading && <div style={{ margin: "auto", display: "flex", width: "30%", padding: "1rem", alignItems: "center", justifyContent: "space-between", marginTop: "30px" }}>
         <FontAwesomeIcon
           onClick={() => skipTrackHandler("skip-back")}
           className="skip-back"
@@ -125,7 +131,7 @@ function App() {
           className="skip-forward"
           icon={faAngleRight}
         ></FontAwesomeIcon>
-      </div>
+      </div>}
     </div>
   );
 }
