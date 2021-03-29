@@ -58,6 +58,10 @@ function App() {
         setLoading(data)
       });
 
+      wavesurferRef.current.on("finish", data => {
+        skipTrackHandler("skip-forward")
+      });
+
       if (window) {
         window.surferidze = wavesurferRef.current;
       }
